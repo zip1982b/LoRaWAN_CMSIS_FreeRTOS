@@ -1,0 +1,3 @@
+
+
+int ClockInit(void);

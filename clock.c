@@ -1,0 +1,83 @@
+#include "stm32f1xx.h"
+//Set HSE (8Mhz)
+//returned:
+//  0 - it is OK
+//  1 - error HSE
+//  2 - error PLL
+int ClockInit(void)
+{
+  __IO int StartUpCounter;
+  
+  ////////////////////////////////////////////////////////////
+  //Startup HSE
+  ////////////////////////////////////////////////////////////
+  
+  RCC->CR |= (1<<RCC_CR_HSEON_Pos); // HSE on
+  
+  for(StartUpCounter=0; ; StartUpCounter++)
+  {
+    if(RCC->CR & (1<<RCC_CR_HSERDY_Pos))
+      break;
+    
+    //if not startup
+    //switch off all
+    //return error
+    if(StartUpCounter > 0x1000)
+    {
+      RCC->CR &= ~(1<<RCC_CR_HSEON_Pos); // HSE
+      return 1;
+    }
+  }
+  
+  ////////////////////////////////////////////////////////////
+  //Set and startup PLL
+  ////////////////////////////////////////////////////////////
+  
+  //set PLL
+  RCC->CFGR |= (0x07<<RCC_CFGR_PLLMULL_Pos) //PLL x9
+            | (0x01<<RCC_CFGR_PLLSRC_Pos); //PLL from HSE
+  
+  
+  RCC->CR |= (1<<RCC_CR_PLLON_Pos); //startup PLL
+  
+  //whait ...
+  for(StartUpCounter=0; ; StartUpCounter++)
+  {
+    if(RCC->CR & (1<<RCC_CR_PLLRDY_Pos))
+      break; // wery good
+    
+    //if not startup PLL, ??
+    //switch off all
+    //return error
+    if(StartUpCounter > 0x1000)
+    {
+      RCC->CR &= ~(1<<RCC_CR_HSEON_Pos); //switch off HSE
+      RCC->CR &= ~(1<<RCC_CR_PLLON_Pos); //switch off PLL
+      return 2;
+    }
+  }
+  
+  ////////////////////////////////////////////////////////////
+  //Set FLASH 
+  ////////////////////////////////////////////////////////////
+  
+  //set 2 cycle waiting for Flash
+  // 48 MHz < SYSCLK <= 72 MHz
+  FLASH->ACR |= (0x02<<FLASH_ACR_LATENCY_Pos); 
+  
+  RCC->CFGR |= (0x00<<RCC_CFGR_PPRE2_Pos) // APB2 / 1 (72MHz)
+            | (0x04<<RCC_CFGR_PPRE1_Pos) // APB1 / 2 (36MHz)
+            | (0x00<<RCC_CFGR_HPRE_Pos); // AHB / 1 (72MHz)
+  
+  
+  RCC->CFGR |= (0x02<<RCC_CFGR_SW_Pos); //from PLL
+  //waiting
+  while((RCC->CFGR & RCC_CFGR_SWS_Msk) != (0x02<<RCC_CFGR_SWS_Pos))
+  {
+  }
+  
+  //HSE-on HSI-off
+  RCC->CR &= ~(1<<RCC_CR_HSION_Pos);
+  
+  return 0;
+}
