@@ -2919,6 +2919,12 @@
         <file>
             <name>$PROJ_DIR$\inc\gpio.h</name>
         </file>
+        <file>
+            <name>$PROJ_DIR$\inc\RingFIFO.h</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\inc\uart.h</name>
+        </file>
     </group>
     <file>
         <name>$PROJ_DIR$\clock.c</name>
@@ -2928,5 +2934,11 @@
     </file>
     <file>
         <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\RingFIFO.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\uart.c</name>
     </file>
 </project>
