@@ -1,19 +1,35 @@
-"D:\workspace\LoRaWAN_CMSIS_FreeRTOS\FreeRTOS\src\port.c"
+"C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\FreeRTOS\src\port.c"
 -std=c11
 -ferror-limit=0
 -fbracket-depth=512
 -funsigned-char
 -MD
 -MF
-D:\workspace\LoRaWAN_CMSIS_FreeRTOS\Release\Obj\port.pbi.dep
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\Release\Obj\port.pbi.dep
 -o
 port.pbi
 -I
-D:\workspace\LoRaWAN_CMSIS_FreeRTOS\FreeRTOS\src
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\FreeRTOS\src
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\inc\
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\CMSIS\inc\
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\FreeRTOS\inc\
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc
 -I
 C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\inc
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\CMSIS\inc
+-I
+C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\FreeRTOS\inc
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -199,6 +215,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c
 -D__DEF_STACK_MEM_INDEX__=0
 -D__PRAGMA_PACK_ON__=1
 -D__MULTIPLE_INHERITANCE__=1
+-D__FOR_DEBUG__=
 -D__AAPCS__=1
 -D__ARM4TM__=4
 -D__ARM5TM__=5
@@ -288,7 +305,7 @@ C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c
 -D__EDG_FLOAT80_ENABLING_POSSIBLE=0
 -D__EDG_FLOAT128_ENABLING_POSSIBLE=0
 -D__EDG_INT128_EXTENSIONS_ALLOWED=0
--DNDEBUG=1
+-DRELEASE=1
 -D_DLIB_CONFIG_FILE_HEADER_NAME="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\arm\inc\c\DLib_Config_Normal.h"
 -D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.4\\arm\\inc\\c\\DLib_Config_Normal.h"
 -D__VERSION__="IAR ANSI C/C++ Compiler V8.50.4.261/W32 for ARM"

@@ -6,9 +6,9 @@
 #include "queue.h"
 #include "uart.h"
 #include "modemRHF78-052.h"
+#include "stm32f1xx.h"
 
-
-
+__IO uint32_t tmpreg;
 
 void vMCU_worked(void *arg);
 void vLoRaWAN_Modem(void *arg);
@@ -105,9 +105,23 @@ static const UARTInitStructure_t UARTInitStr =
 
 int main()
 {
-	RCC_DeInit();
+    RCC_DeInit();
   //if(!ClockInit()){
+        
+    SetSysClockTo72();
+	/*
+	RCC_DeInit();
+	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
+	  //Delay after an RCC peripheral clock enabling
+	tmpreg = READ_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
+	  //NOJTAG: JTAG-DP Disabled and SW-DP Enabled 
+	CLEAR_BIT(AFIO->MAPR,AFIO_MAPR_SWJ_CFG);
+	SET_BIT(AFIO->MAPR, AFIO_MAPR_SWJ_CFG_JTAGDISABLE);
 	SetSysClockTo72();
+	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPAEN |RCC_APB2ENR_IOPBEN);
+	  //Delay after an RCC peripheral clock enabling
+	tmpreg = READ_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPAEN |RCC_APB2ENR_IOPBEN);
+*/
     PortInit();
     UART_Init(2, &UARTInitStr);
     
@@ -138,208 +152,450 @@ void vMCU_worked(void *arg){
 
 
 void vLoRaWAN_Modem(void *arg){
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(check_link)){
-	vTaskDelay(500);
-	if(receive_answer(answer_check_link)){
-          //nop;
-		printf("link is ok\n");
-	}
-        else printf("link is not ok\n");
+        #if defined DEBUG
+        vTaskDelay(5000 / portTICK_RATE_MS);
+        #endif
+        
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(check_link)){
+		vTaskDelay(500);
+		if(receive_answer(answer_check_link)){
+            #if defined DEBUG
+			printf("link is ok\n");
+            #endif
+            #if defined RELEASE
+			asm("nop");
+            #endif
+		}
+		else {
+			#if defined DEBUG
+			printf("link is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
 	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(set_DEVADDR)){
-	vTaskDelay(500);
-	if(receive_answer(answer_DEVADDR)){
-		printf("dev addr is ok\n");
-	}
-        else printf("dev addr is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(set_DEVADDR)){
+		vTaskDelay(500);
+		if(receive_answer(answer_DEVADDR)){
+			#if defined DEBUG
+			printf("device address is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("device address is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(set_devEUI)){
-	vTaskDelay(500);
-	if(receive_answer(answer_devEUI)){
-		printf("dev EUI is ok\n");
-	}
-        else printf("dev EUI is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(set_devEUI)){
+		vTaskDelay(500);
+		if(receive_answer(answer_devEUI)){
+			#if defined DEBUG
+			printf("dev EUI is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("dev EUI is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);  
-  if(send_AT_command(EU433)){
-	vTaskDelay(500);
-	if(receive_answer(answer_EU433)){
-		printf("EU433 is ok\n");
-	}
-        else printf("EU433 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(EU433)){
+		vTaskDelay(500);
+		if(receive_answer(answer_EU433)){
+			#if defined DEBUG
+			printf("EU433 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("EU433 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
    
-  //UART_ReadBuffClear(2);
-  //UART_WriteBuffClear(2);  
-  if(send_AT_command(set_channel0)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel0)){
-		printf("set_channel0 is ok\n");
-	}
-        else printf("set_channel0 is not ok\n");
-	}
-	
-  //UART_ReadBuffClear(2);
-  //UART_WriteBuffClear(2);  
-  if(send_AT_command(set_channel1)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel1)){
-		printf("set_channel1 is ok\n");
-	}
-        else printf("set_channel1 is not ok\n");
-	}
-	
-  //UART_ReadBuffClear(2);
-  //UART_WriteBuffClear(2);  
-  if(send_AT_command(set_channel2)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel2)){
-		printf("set_channel2 is ok\n");
-	}
-        else printf("set_channel2 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(set_channel0)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel0)){
+			#if defined DEBUG
+			printf("set_channel0 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+			
+		}
+        else {
+			#if defined DEBUG
+			printf("set_channel0 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-  //UART_ReadBuffClear(2);
-  //UART_WriteBuffClear(2);  
-  if(send_AT_command(set_channel3)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel3)){
-		printf("set_channel3 is ok\n");
-	}
-        else printf("set_channel3 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(set_channel1)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel1)){
+			#if defined DEBUG
+			printf("set_channel1 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("set_channel1 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-  //UART_ReadBuffClear(2);
-  //UART_WriteBuffClear(2);  
-  if(send_AT_command(set_channel4)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel4)){
-		printf("set_channel4 is ok\n");
-	}
-        else printf("set_channel4 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(set_channel2)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel2)){
+			#if defined DEBUG
+			printf("set_channel2 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else{
+			#if defined DEBUG
+			printf("set_channel2 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);  
-  if(send_AT_command(set_channel5)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel5)){
-		printf("set_channel5 is ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(set_channel3)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel3)){
+			#if defined DEBUG
+			printf("set_channel3 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("set_channel3 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
-        else printf("set_channel5 is not ok\n");
+	
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(set_channel4)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel4)){
+			#if defined DEBUG
+			printf("set_channel4 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("set_channel4 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+	}
+	
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);  
+	if(send_AT_command(set_channel5)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel5)){
+			#if defined DEBUG
+			printf("set_channel5 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("set_channel5 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(set_channel6)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel6)){
-		printf("set_channel6 is ok\n");
-	}
-        else printf("set_channel6 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(set_channel6)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel6)){
+			#if defined DEBUG
+			printf("set_channel6 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else{
+			#if defined DEBUG
+			printf("set_channel6 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(set_channel7)){
-	vTaskDelay(500);
-	if(receive_answer(answer_set_channel7)){
-		printf("set_channel7 is ok\n");
-	}
-        else printf("set_channel7 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(set_channel7)){
+		vTaskDelay(500);
+		if(receive_answer(answer_set_channel7)){
+			#if defined DEBUG
+			printf("set_channel7 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("set_channel7 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
 	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);	
-  if(send_AT_command(RXWIN2)){
-	vTaskDelay(500);
-	if(receive_answer(answer_RXWIN2)){
-		printf("RXWIN2 is ok\n");
-	}
-        else printf("RXWIN2 is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);	
+	if(send_AT_command(RXWIN2)){
+		vTaskDelay(500);
+		if(receive_answer(answer_RXWIN2)){
+			#if defined DEBUG
+			printf("RXWIN2 is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("RXWIN2 is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
   
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(default_Data_Rate)){
-	vTaskDelay(500);
-	if(receive_answer(answer_default_Data_Rate)){
-		printf("default_Data_Rate is ok\n");
-	}
-        else printf("default_Data_Rate is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(default_Data_Rate)){
+		vTaskDelay(500);
+		if(receive_answer(answer_default_Data_Rate)){
+			#if defined DEBUG
+			printf("default_Data_Rate is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("default_Data_Rate is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(default_Power)){
-	vTaskDelay(500);
-	if(receive_answer(answer_default_Power)){
-		printf("default_Power is ok\n");
-	}
-        else printf("default_Power is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(default_Power)){
+		vTaskDelay(500);
+		if(receive_answer(answer_default_Power)){
+			#if defined DEBUG
+			printf("default_Power is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("default_Power is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(ADR)){
-	vTaskDelay(500);
-	if(receive_answer(answer_ADR)){
-		printf("ADR is ok\n");
-	}
-        else printf("ADR is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(ADR)){
+		vTaskDelay(500);
+		if(receive_answer(answer_ADR)){
+			#if defined DEBUG
+			printf("ADR is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("ADR is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(NwkSKey)){
-	vTaskDelay(500);
-	if(receive_answer(answer_NwkSKey)){
-		printf("NwkSKey is ok\n");
-	}
-        else printf("NwkSKey is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(NwkSKey)){
+		vTaskDelay(500);
+		if(receive_answer(answer_NwkSKey)){
+			#if defined DEBUG
+			printf("NwkSKey is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("NwkSKey is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}	
  
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(AppSKey)){
-	vTaskDelay(500);
-	if(receive_answer(answer_AppSKey)){
-		printf("AppSKey is ok\n");
-	}
-        else printf("AppSKey is not ok\n");
+ 
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(AppSKey)){
+		vTaskDelay(500);
+		if(receive_answer(answer_AppSKey)){
+			#if defined DEBUG
+			printf("AppSKey is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+			
+		}
+        else {
+			
+		}
 	}
   
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(Port)){
-	vTaskDelay(500);
-	if(receive_answer(answer_Port)){
-		printf("Port is ok\n");
-	}
-        else printf("Port is not ok\n");
+  
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(Port)){
+		vTaskDelay(500);
+		if(receive_answer(answer_Port)){
+			#if defined DEBUG
+			printf("Port is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
+        else {
+			#if defined DEBUG
+			printf("Port is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
   
-  UART_ReadBuffClear(2);
-  UART_WriteBuffClear(2);
-  if(send_AT_command(ClassA)){
-	vTaskDelay(500);
-	if(receive_answer(answer_ClassA)){
-		printf("ClassA is ok\n");
-	}
-        else printf("ClassA is not ok\n");
+	UART_ReadBuffClear(2);
+	UART_WriteBuffClear(2);
+	if(send_AT_command(ClassA)){
+		vTaskDelay(500);
+		if(receive_answer(answer_ClassA)){
+			#if defined DEBUG
+			printf("ClassA is ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+			
+		}
+        else {
+			#if defined DEBUG
+			printf("ClassA is not ok\n");
+			#endif
+			#if defined RELEASE
+			asm("nop");
+			#endif
+		}
 	}
 	
 	
@@ -347,11 +603,10 @@ void vLoRaWAN_Modem(void *arg){
     vTaskDelay(10000);
     UART_ReadBuffClear(2);
     UART_WriteBuffClear(2);
-    
     send_AT_command(message);
-	
-	
   }
 }
 
 
+	
+	
