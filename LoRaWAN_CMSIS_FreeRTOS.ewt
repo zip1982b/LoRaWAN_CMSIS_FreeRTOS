@@ -2920,6 +2920,9 @@
             <name>$PROJ_DIR$\inc\gpio.h</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\inc\modemRHF78-052.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\inc\RingFIFO.h</name>
         </file>
         <file>
@@ -2934,6 +2937,9 @@
     </file>
     <file>
         <name>$PROJ_DIR$\main.c</name>
+    </file>
+    <file>
+        <name>$PROJ_DIR$\modemRHF78-052.c</name>
     </file>
     <file>
         <name>$PROJ_DIR$\RingFIFO.c</name>
