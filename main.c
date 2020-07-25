@@ -14,6 +14,7 @@ void vMCU_worked(void *arg);
 void vLoRaWAN_Modem(void *arg);
 
 //commands
+/*
 const  char check_link[] = "AT\r\n";
 const  char answer_check_link[] = "+AT: OK\r\n";
 
@@ -88,7 +89,7 @@ const  char answer_AppSKey[] = "+KEY: APPSKEY F8ADB8AC7FEA829DD5CEFC00A72C55D7\r
 
 const  char ClassA[] = "AT+CLASS=A\r\n";
 const  char answer_ClassA[] = "+CLASS: A\r\n";
-
+*/
 
 const  char message[] = "AT+CMSG=\"Hello Zhan!\"\r\n";
 
@@ -106,9 +107,9 @@ static const UARTInitStructure_t UARTInitStr =
 int main()
 {
     RCC_DeInit();
-  //if(!ClockInit()){
+    if(!ClockInit()){
         
-    SetSysClockTo72();
+    //SetSysClockTo72();
 	/*
 	RCC_DeInit();
 	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
@@ -121,7 +122,7 @@ int main()
 	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPAEN |RCC_APB2ENR_IOPBEN);
 	  //Delay after an RCC peripheral clock enabling
 	tmpreg = READ_BIT(RCC->APB2ENR, RCC_APB2ENR_IOPAEN |RCC_APB2ENR_IOPBEN);
-*/
+        */
     PortInit();
     UART_Init(2, &UARTInitStr);
     
@@ -130,11 +131,11 @@ int main()
     xTaskCreate(vMCU_worked, "MCU worked", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
     xTaskCreate(vLoRaWAN_Modem, "RHF78-052", 256, NULL, 2, NULL);
     vTaskStartScheduler();
-  //}
-  //else return 0;
+  }
+  else return 0;
   
   while(1){
-    
+    asm("nop");
   }
 }
 
@@ -152,10 +153,10 @@ void vMCU_worked(void *arg){
 
 
 void vLoRaWAN_Modem(void *arg){
-        #if defined DEBUG
-        vTaskDelay(5000 / portTICK_RATE_MS);
-        #endif
-        
+    #if defined DEBUG
+    vTaskDelay(5000 / portTICK_RATE_MS);
+    #endif
+    /* configurable only once ...
 	UART_ReadBuffClear(2);
 	UART_WriteBuffClear(2);
 	if(send_AT_command(check_link)){
@@ -598,7 +599,7 @@ void vLoRaWAN_Modem(void *arg){
 		}
 	}
 	
-	
+*/
   while(1){
     vTaskDelay(10000);
     UART_ReadBuffClear(2);

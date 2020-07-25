@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.general.xcl" --backend -f "C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\workspace\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.general.xcl" --backend -f "D:\workspace\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.general.xcl" "--debug_file=%~1" --backend -f "C:\Users\MrZang\IAR_prj\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.4\common\bin\cspybat" -f "D:\workspace\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\workspace\LoRaWAN_CMSIS_FreeRTOS\settings\LoRaWAN_CMSIS_FreeRTOS.Debug.driver.xcl" 
 
 @echo off 
 :end
