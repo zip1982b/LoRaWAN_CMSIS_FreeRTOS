@@ -7,6 +7,8 @@
 #include "uart.h"
 #include "modemRHF78-052.h"
 #include "stm32f1xx.h"
+#include "cayenne_lpp.h"
+
 
 __IO uint32_t tmpreg;
 
@@ -91,7 +93,7 @@ const  char ClassA[] = "AT+CLASS=A\r\n";
 const  char answer_ClassA[] = "+CLASS: A\r\n";
 */
 
-const  char message[] = "AT+CMSG=\"Hello Zhan!\"\r\n";
+const  char message[] = "AT+CMSG=\"Hello Zhan!\"\r\n"; //show AT+MSG in App Server
 
 
 
@@ -109,7 +111,6 @@ int main()
     RCC_DeInit();
     if(!ClockInit()){
         
-    //SetSysClockTo72();
 	/*
 	RCC_DeInit();
 	SET_BIT(RCC->APB2ENR, RCC_APB2ENR_AFIOEN);
@@ -600,6 +601,14 @@ void vLoRaWAN_Modem(void *arg){
 	}
 	
 */
+
+	cayenne_lpp_t payload_buffer_to_send = { 0 };
+
+	cayenne_lpp_add_temperature(&payload_buffer_to_send, 3, 27.2);
+	#if defined DEBUG
+    _print_buffer(&payload_buffer_to_send);
+    #endif
+
   while(1){
     vTaskDelay(10000);
     UART_ReadBuffClear(2);

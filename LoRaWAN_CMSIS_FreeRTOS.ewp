@@ -1282,7 +1282,7 @@
                 </option>
                 <option>
                     <name>CCDefines</name>
-                    <state>RELEASE
+                    <state>RELEASE
 </state>
                 </option>
                 <option>
@@ -2190,6 +2190,9 @@
     <group>
         <name>inc</name>
         <file>
+            <name>$PROJ_DIR$\inc\cayenne_lpp.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\inc\clock.h</name>
         </file>
         <file>
@@ -2208,6 +2211,9 @@
             <name>$PROJ_DIR$\inc\uart.h</name>
         </file>
     </group>
+    <file>
+        <name>$PROJ_DIR$\cayenne_lpp.c</name>
+    </file>
     <file>
         <name>$PROJ_DIR$\clock.c</name>
     </file>
