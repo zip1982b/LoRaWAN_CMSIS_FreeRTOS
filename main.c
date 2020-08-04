@@ -1,4 +1,4 @@
-
+#include "string.h"
 #include "clock.h"
 #include "gpio.h"
 #include "FreeRTOS.h"
@@ -14,6 +14,25 @@ __IO uint32_t tmpreg;
 
 void vMCU_worked(void *arg);
 void vLoRaWAN_Modem(void *arg);
+
+
+
+static void _print_buffer(cayenne_lpp_t *lpp)
+{
+    for (uint8_t i = 0; i < lpp->cursor; ++i) {
+        printf("dec-%02X ", lpp->buffer[i]);
+    }
+    puts("");
+}
+
+static void _sprint_buffer(cayenne_lpp_t *lpp, char *payload_string, char *dst)
+{
+    for (uint8_t i = 0; i < lpp->cursor; ++i) {
+        sprintf(payload_string, "%02X", lpp->buffer[i]);
+		strcat(dst, payload_string);
+    }
+	strcat(dst, "\"\r\n");
+}
 
 //commands
 /*
@@ -93,7 +112,9 @@ const  char ClassA[] = "AT+CLASS=A\r\n";
 const  char answer_ClassA[] = "+CLASS: A\r\n";
 */
 
-const  char message[] = "AT+CMSG=\"Hello Zhan!\"\r\n"; //show AT+MSG in App Server
+const  char message[] = "AT+CMSGHEX=\"03670110\"\r\n"; //show AT+MSG in App Server
+char AT_CMSGHEX[50] = "AT+CMSGHEX=\""; //dst
+char payload_str[10];
 
 
 
@@ -130,7 +151,7 @@ int main()
     
     
     xTaskCreate(vMCU_worked, "MCU worked", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-    xTaskCreate(vLoRaWAN_Modem, "RHF78-052", 256, NULL, 2, NULL);
+    xTaskCreate(vLoRaWAN_Modem, "RHF78-052", 512, NULL, 2, NULL);
     vTaskStartScheduler();
   }
   else return 0;
@@ -602,18 +623,19 @@ void vLoRaWAN_Modem(void *arg){
 	
 */
 
-	cayenne_lpp_t payload_buffer_to_send = { 0 };
-
-	cayenne_lpp_add_temperature(&payload_buffer_to_send, 3, 27.2);
+	cayenne_lpp_t payload = { 0 };
+	
+	cayenne_lpp_add_temperature(&payload, 3, 27.2);
 	#if defined DEBUG
-    _print_buffer(&payload_buffer_to_send);
-    #endif
+	_print_buffer(&payload);
+	#endif
+	_sprint_buffer(&payload, payload_str, AT_CMSGHEX);
 
   while(1){
-    vTaskDelay(10000);
+    vTaskDelay(10000 / portTICK_RATE_MS);
     UART_ReadBuffClear(2);
     UART_WriteBuffClear(2);
-    send_AT_command(message);
+    send_AT_command(AT_CMSGHEX);
   }
 }
 
