@@ -41,3 +41,14 @@ uint8_t receive_answer(const char *correct_answer){
 	return 1;
 }
 
+
+void print_RX_buffer(void)
+{
+	uint8_t n = UART_BytesToRead(2);
+	for(uint8_t i=0; i<=n-1; i++){
+		char c = UART_GetC(2);
+		printf("%c", c);
+		
+	}
+	puts("\n");
+}
